@@ -1,0 +1,61 @@
+cmake_minimum_required(VERSION 3.10)
+project(Game)
+
+set(CMAKE_CXX_STANDARD 17)
+
+# Set SDL2, SDL2_image, and SDL2_net directories
+set(SDL2_DIR "${CMAKE_SOURCE_DIR}/lib/SDL2")
+set(SDL2_IMAGE_DIR "${CMAKE_SOURCE_DIR}/lib/SDL2_image")
+set(SDL2_NET_DIR "${CMAKE_SOURCE_DIR}/lib/SDL2_net")
+
+# Include SDL2, SDL2_image, and SDL2_net headers
+include_directories(
+    "${SDL2_DIR}/include"
+    "${SDL2_IMAGE_DIR}/include"
+    "${SDL2_NET_DIR}/include"
+)
+
+# Add your source files
+file(GLOB_RECURSE SRC_FILES src/*.cpp include/*.hpp)
+
+# Create the executable
+add_executable(Game main.cpp ${SRC_FILES})
+
+# Define SDL_MAIN_HANDLED globally before including SDL headers
+target_compile_definitions(Game PRIVATE SDL_MAIN_HANDLED)
+
+# Link SDL2, SDL2_image, and SDL2_net libraries
+target_link_libraries(Game 
+    "${SDL2_DIR}/lib/x64/SDL2.lib" 
+    "${SDL2_IMAGE_DIR}/lib/x64/SDL2_image.lib"
+    "${SDL2_NET_DIR}/lib/x64/SDL2_net.lib"
+)
+
+add_custom_command(TARGET Game POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    "${SDL2_DIR}/lib/x64/SDL2.dll"
+    "${SDL2_IMAGE_DIR}/lib/x64/SDL2_image.dll"
+    "${SDL2_NET_DIR}/lib/x64/SDL2_net.dll"
+    "${SDL2_IMAGE_DIR}/lib/x64/libjpeg-9.dll"
+    "${SDL2_IMAGE_DIR}/lib/x64/libpng16-16.dll"
+    "${SDL2_IMAGE_DIR}/lib/x64/libtiff-5.dll"
+    "${SDL2_IMAGE_DIR}/lib/x64/libwebp-4.dll"
+    "${SDL2_IMAGE_DIR}/lib/x64/zlib1.dll"
+    $<TARGET_FILE_DIR:Game>
+)
+
+message(STATUS "fucking cmake DIR: ${CMAKE_SOURCE_DIR}")
+message(STATUS "SDL2_DIR: ${SDL2_DIR}")
+message(STATUS "SDL2_IMAGE_DIR: ${SDL2_IMAGE_DIR}")
+message(STATUS "SDL2_NET_DIR: ${SDL2_NET_DIR}")
+
+# Optional: Check if DLL files exist and report an error if they don't
+if(NOT EXISTS "${SDL2_DIR}/lib/x64/SDL2.dll")
+    message(FATAL_ERROR "SDL2.dll not found at ${SDL2_DIR}/lib/x64/SDL2.dll")
+endif()
+if(NOT EXISTS "${SDL2_IMAGE_DIR}/lib/x64/SDL2_image.dll")
+    message(FATAL_ERROR "SDL2_image.dll not found at ${SDL2_IMAGE_DIR}/lib/x64/SDL2_image.dll")
+endif()
+if(NOT EXISTS "${SDL2_NET_DIR}/lib/x64/SDL2_net.dll")
+    message(FATAL_ERROR "SDL2_net.dll not found at ${SDL2_NET_DIR}/lib/x64/SDL2_net.dll")
+endif()

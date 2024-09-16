@@ -364,9 +364,9 @@ FodyWeavers.xsd
 
 
 # Explicitly include the /lib folder and its contents
-!lib/
-!lib/**/
-!lib/**/*
+!Game/lib/
+!Game/lib/**/
+!Game/lib/**/*
 
 # Additionally, ensure specific file types or subfolders aren't excluded
-!lib/**/*.txt
+!Game/lib/**/*.txt

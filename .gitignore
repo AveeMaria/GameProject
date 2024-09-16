@@ -361,3 +361,12 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+
+# Explicitly include the /lib folder and its contents
+!lib/
+!lib/**/
+!lib/**/*
+
+# Additionally, ensure specific file types or subfolders aren't excluded
+!lib/**/*.txt
